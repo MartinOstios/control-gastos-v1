@@ -1,14 +1,14 @@
-from pydantic import BaseModel, Field, validator, model_validator
-from typing import Any, Optional, List
+from pydantic import BaseModel, Field, validator
+from typing import Optional
 import datetime
 
 
 class Ingreso (BaseModel):
     id: int = Field(gt=0, title="El id del registro del ingreso")
-    fecha: datetime.date = Field(title="Expiration date of the product")
+    fecha: datetime.date = Field(title="La fecha en la que se hizo el ingreso")
     descripcion: Optional[str] = Field(default=None, title="La descripción del ingreso")
     valor: float = Field(gt=0, title="El valor del ingreso")
-    categoria: int = Field(gt=0, title="El ID de la categoría")
+    categoria: int = Field(gt=0, title="El ID de la categoría de ingreso")
     
     @validator("fecha")
     @classmethod

@@ -1,27 +1,39 @@
 from fastapi import FastAPI
-from routers import egresos, ingresos, categoria_egresos, categoria_ingresos
+from routers import egresos, ingresos, categoria_egresos, categoria_ingresos, reportes
 
 
 tags_metadata = [
     {
-        "name": "web",
-        "description": "Endpoints of example",
+        "name": "egreso",
+        "description": "Endpoints de la gestión de egresos",
     },
     {
-        "name": "products",
-        "description": "Product handling endpoints",
+        "name": "ingreso",
+        "description": "Endpoints de la gestión de ingresos",
     },
+    {
+        "name": "categoria-egreso",
+        "description": "Endpoints de la gestión de las categorías de egresos",
+    },
+    {
+        "name": "categoria-ingreso",
+        "description": "Endpoints de la gestión de las categorías de ingresos",
+    },
+    {
+        "name": "reporte",
+        "description": "Endpoints para obtener reportes"
+    }
 ]
 app = FastAPI(openapi_tags=tags_metadata)
 app.include_router(egresos.router)
 app.include_router(ingresos.router)
 app.include_router(categoria_egresos.router)
 app.include_router(categoria_ingresos.router)
+app.include_router(reportes.router)
 
-
-app.title = "Gastos API"
-app.summary = "Gastos REST API whit FastAPI"
-app.description = "This is a simple API to manage the expenses."
+app.title = "Control de gastos V1"
+app.summary = "Control de gastos REST API con FastAPI"
+app.description = "Esta es la API de una aplicación sencilla para el control de gastos"
 app.version = "0.0.1"
 app.contact = {
     "name": "Julian y Martin"

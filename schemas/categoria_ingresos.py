@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
-from typing import Any, Optional, List
+from typing import Optional
 
 class CategoriaIngresos(BaseModel):
-    id: int = Field(title="Id de la categoria")
+    id: int = Field(gt=0, title="Id de la categoria")
     nombre: str = Field(title="Nombre de la categoria")
     descripcion: Optional[str] = Field(default=None, title="Descripcion de la categoria")
 

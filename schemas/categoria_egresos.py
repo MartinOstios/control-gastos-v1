@@ -1,8 +1,8 @@
-from pydantic import BaseModel, Field, validator, model_validator
-from typing import Any, Optional, List
+from pydantic import BaseModel, Field
+from typing import Optional
 
 class CategoriaEgresos (BaseModel):
-    id: int = Field(title="Id de la categoria")
+    id: int = Field(gt= 0, title="Id de la categoria")
     nombre: str = Field(title="Nombre de la categoria")
     descripcion: Optional[str] = Field(default=None, title="Descripcion de la categoria")
 

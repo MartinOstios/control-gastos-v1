@@ -1,12 +1,12 @@
-from pydantic import BaseModel, Field, validator, model_validator
-from typing import Any, Optional, List
+from pydantic import BaseModel, Field, validator
+from typing import Optional
 import datetime 
 class Egreso (BaseModel):
-    id: int = Field(ge="1" , title="Id del egreso")
+    id: int = Field(gt=0 , title="Id del egreso")
     fecha: datetime.date = Field(title="Fecha del egreso")
     descripcion: Optional[str] = Field(default=None, title="Descripcion del egreso")
-    valor: float = Field(lg=50, title="Valor del egreso")
-    categoria: int = Field(title="Categoria del egreso")
+    valor: float = Field(gt=0, title="Valor del egreso")
+    categoria: int = Field(gt=0, title="Categoria del egreso")
     
     @validator("fecha")
     @classmethod
