@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from schemas.egresos import Egreso
+from src.schemas.egresos import Egreso
 from fastapi import Body, Path
 from fastapi.responses import JSONResponse
 from typing import List
