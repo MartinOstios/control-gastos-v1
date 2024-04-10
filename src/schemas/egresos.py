@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, validator
 from typing import Optional
 import datetime 
 class Egreso (BaseModel):
-    id: int = Field(gt=0 , title="Id del egreso")
+    id: Optional[int] = Field(default=None, gt=0 , title="Id del egreso")
     fecha: datetime.date = Field(title="Fecha del egreso")
     descripcion: Optional[str] = Field(default=None, title="Descripcion del egreso")
     valor: float = Field(gt=0, title="Valor del egreso")
