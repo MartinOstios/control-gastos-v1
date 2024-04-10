@@ -4,8 +4,7 @@ from fastapi import Body, Path
 from fastapi.responses import JSONResponse
 from typing import List
 
-router = APIRouter(prefix="/api/v1/categoria-ingresos",
-                   tags=["categoria-ingreso"])
+router = APIRouter(prefix="/api/v1/categoria-ingresos",tags=["categoria-ingreso"])
 
 categorias_ingresos = [
     {

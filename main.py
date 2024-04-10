@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from src.routers import egresos, ingresos, categoria_egresos, categoria_ingresos, reportes
+from src.middlewares.errorHandler import ErrorHandler
+from src.routers import egresos, ingresos, categoria_egresos, categoria_ingresos, reportes
 from src.config.database import Base, engine
 from src.models.categoria_egreso import CategoriaEgreso
 from src.models.categoria_ingreso import CategoriaIngreso
@@ -37,6 +39,7 @@ app.include_router(ingresos.router)
 app.include_router(categoria_egresos.router)
 app.include_router(categoria_ingresos.router)
 app.include_router(reportes.router)
+app.add_middleware(ErrorHandler)
 
 app.title = "Control de gastos V1"
 app.summary = "Control de gastos REST API con FastAPI"
