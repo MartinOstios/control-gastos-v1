@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from schemas.categoria_egresos import CategoriaEgresos
+from src.schemas.categoria_egresos import CategoriaEgresos
 from fastapi import Body, Path
 from fastapi.responses import JSONResponse
 from typing import List

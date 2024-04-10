@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from fastapi import FastAPI, Body, Query, Path
 from fastapi.responses import JSONResponse
 from typing import Any, Optional, List
-from routers import egresos, ingresos, categoria_egresos, categoria_ingresos
+from src.routers import egresos, ingresos, categoria_egresos, categoria_ingresos
 
 router = APIRouter(prefix="/api/v1/reportes", tags=["reporte"])
 

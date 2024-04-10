@@ -8,7 +8,7 @@ class Ingreso (BaseModel):
     fecha: datetime.date = Field(title="La fecha en la que se hizo el ingreso")
     descripcion: Optional[str] = Field(default=None, title="La descripción del ingreso")
     valor: float = Field(gt=0, title="El valor del ingreso")
-    categoria: int = Field(gt=0, title="El ID de la categoría de ingreso")
+    categoria_id: int = Field(gt=0, title="El ID de la categoría de ingreso")
     
     @validator("fecha")
     @classmethod
@@ -21,10 +21,9 @@ class Ingreso (BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "id": 1,
                 "fecha": "2024-04-01",
                 "descripcion": "El pago del salario",
                 "valor": 1000000,
-                "categoria": 1
+                "categoria_id": 1
             }
         }

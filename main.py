@@ -1,5 +1,12 @@
 from fastapi import FastAPI
-from routers import egresos, ingresos, categoria_egresos, categoria_ingresos, reportes
+from src.routers import egresos, ingresos, categoria_egresos, categoria_ingresos, reportes
+from src.config.database import Base, engine
+from src.models.categoria_egreso import CategoriaEgreso
+from src.models.categoria_ingreso import CategoriaIngreso
+from src.models.egreso import Egreso
+from src.models.ingreso import Ingreso
+
+Base.metadata.create_all(bind=engine)
 
 
 tags_metadata = [
@@ -38,3 +45,5 @@ app.version = "0.0.1"
 app.contact = {
     "name": "Julian y Martin"
 }
+
+

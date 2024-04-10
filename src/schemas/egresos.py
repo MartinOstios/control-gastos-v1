@@ -6,7 +6,7 @@ class Egreso (BaseModel):
     fecha: datetime.date = Field(title="Fecha del egreso")
     descripcion: Optional[str] = Field(default=None, title="Descripcion del egreso")
     valor: float = Field(gt=0, title="Valor del egreso")
-    categoria: int = Field(gt=0, title="Categoria del egreso")
+    categoria_id: int = Field(gt=0, title="Categoria del egreso")
     
     @validator("fecha")
     @classmethod
@@ -19,10 +19,9 @@ class Egreso (BaseModel):
     class Config:
             json_schema_extra = {
                 "example": {
-                    "id": 1,
                     "fecha": "2021-09-01",
                     "descripcion": "Pago de arriendo",
                     "valor": 100000,
-                    "categoria": 1
+                    "categoria_id": 1
                 }
             }
