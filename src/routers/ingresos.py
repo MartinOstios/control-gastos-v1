@@ -11,30 +11,6 @@ from fastapi.params import Query
 from fastapi import status
 router = APIRouter(prefix="/api/v1/ingresos", tags=["ingreso"])
 
-ingresos = [
-    {
-        "id": 1,
-        "fecha": "2021-09-01",
-        "descripcion": "Pago de nómina",
-        "valor": 500000,
-        "categoria": 1
-    },
-    {
-        "id": 2,
-        "fecha": "2021-09-02",
-        "descripcion": "Pago de plata prestada a un amigo",
-        "valor": 100000,
-        "categoria": 2
-    },
-    {
-        "id": 3,
-        "fecha": "2021-09-03",
-        "descripcion": "Pago de intereses de las cesantias",
-        "valor": 30000,
-        "categoria": 3
-    }
-]
-
 
 @router.get("/", response_model=List[Ingreso], description="Obtener todos los ingresos")
 def obtener_ingresos(offset: int = Query(default=None, min=0),limit: int = Query(default=None, min=1)
