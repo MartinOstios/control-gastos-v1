@@ -7,6 +7,7 @@ from src.models.categoria_ingreso import CategoriaIngreso
 from src.models.egreso import Egreso
 from src.models.ingreso import Ingreso
 from src.models.usuario import Usuario
+from src.routers.auth import auth_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -35,7 +36,12 @@ tags_metadata = [
     {
         "name": "reporte",
         "description": "Endpoints para obtener reportes"
-    }
+    },
+    {
+    "name": "auth",
+    "description": "User's authentication",
+    },
+
 ]
 app = FastAPI(openapi_tags=tags_metadata)
 app.include_router(egresos.router)
@@ -44,6 +50,7 @@ app.include_router(categoria_egresos.router)
 app.include_router(categoria_ingresos.router)
 app.include_router(reportes.router)
 app.include_router(usuario.router)
+app.include_router(prefix="", router=auth_router)
 app.add_middleware(ErrorHandler)
 
 app.title = "Control de gastos V1"
