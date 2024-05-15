@@ -1,5 +1,6 @@
 from typing import List
 from src.schemas.usuario import Usuario
+from src.schemas.usuario import UsuarioCreado
 from src.models.usuario import Usuario as UsuarioModel
 
 class UsuarioRepository():
@@ -18,12 +19,16 @@ class UsuarioRepository():
         element=self.db.query(UsuarioModel).filter(UsuarioModel.id==id).first()
         return element
     
-    def crear_usuario(self, usuario: Usuario) -> dict:
-        new_usuario= UsuarioModel(**usuario.model_dump())
-        self.db.add(new_usuario)
+    def obtener_usuario(self, email: str) -> Usuario:
+        element = self.db.query(UsuarioModel).filter(UsuarioModel.email ==email).first()
+        return element
+    
+    def crear_usuario(self, usuario: UsuarioCreado) -> dict:
+        new_user = UsuarioModel(**usuario.model_dump())
+        self.db.add(new_user)
         self.db.commit()
-        self.db.refresh(new_usuario)
-        return new_usuario
+        self.db.refresh(new_user)
+        return new_user
     
     def update_usuario(self, id: int, usuario: Usuario) -> dict:
         element=self.db.query(UsuarioModel).filter(UsuarioModel.id==id).first()
