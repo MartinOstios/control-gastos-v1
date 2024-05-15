@@ -11,12 +11,17 @@ from fastapi.params import Query
 from fastapi import status
 from src.repositories.categoria_egreso import CategoriaEgresoRepository
 
+from typing import Annotated
+from fastapi.security import HTTPAuthorizationCredentials
+from fastapi import Depends
+from src.auth.has_access import security
+
 router = APIRouter(prefix="/api/v1/categoria-egresos",tags=["categoria-egreso"])
 
 
 
 @router.get("/", response_model=List[CategoriaEgresos], description="Obtener todas las categorias de egresos")
-def obtener_categoria_egresos(offset: int = Query(default=None, min=0),limit: int = Query(default=None, min=1)
+def obtener_categoria_egresos(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], offset: int = Query(default=None, min=0),limit: int = Query(default=None, min=1)
 ) -> List[CategoriaEgresos]:
     db = SessionLocal()
     result=CategoriaEgresoRepository(db).obtener_categorias_egresos(offset, limit)
@@ -24,7 +29,7 @@ def obtener_categoria_egresos(offset: int = Query(default=None, min=0),limit: in
 
 
 @router.get('/{id}', response_model=CategoriaEgresos, description="Obtener una categoria egreso por id")
-def obtener_categoria_egreso(id: int = Path(ge=1)) -> CategoriaEgresos:
+def obtener_categoria_egreso(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], id: int = Path(ge=1)) -> CategoriaEgresos:
     db=SessionLocal()
     element=CategoriaEgresoRepository(db).obtener_categoria_egreso(id)
     if not element:
@@ -33,13 +38,13 @@ def obtener_categoria_egreso(id: int = Path(ge=1)) -> CategoriaEgresos:
 
 
 @router.post('/', response_model=CategoriaEgresos, description="Crear un egreso")
-def crear_categoria_egreso(categoriaEgreso: CategoriaEgresos = Body()) -> dict:
+def crear_categoria_egreso(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], categoriaEgreso: CategoriaEgresos = Body()) -> dict:
     db=SessionLocal()
     new_categoria_egreso= CategoriaEgresoRepository(db).crear_categoria_egreso(categoriaEgreso)
     return JSONResponse(content={"message": "Egreso registrado con exito", "data": jsonable_encoder(new_categoria_egreso)}, status_code=status.HTTP_201_CREATED)
 
 @router.put('/{id}', response_model=dict, description="Actualizar un egreso por id")
-def update_categoria_egreso(id: int = Path(ge=1), categoria_egreso: CategoriaEgresos = Body()) -> dict:
+def update_categoria_egreso(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], id: int = Path(ge=1), categoria_egreso: CategoriaEgresos = Body()) -> dict:
     db=SessionLocal()
     element= CategoriaEgresoRepository(db).update_categoria_egreso(id, categoria_egreso)
     if not element:
@@ -48,7 +53,7 @@ def update_categoria_egreso(id: int = Path(ge=1), categoria_egreso: CategoriaEgr
 
 
 @router.delete('/{id}', response_model=dict, description="Eliminar un egreso por id")
-def eliminar_categoria_egreso(id: int = Path(ge=1)) -> dict:
+def eliminar_categoria_egreso(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], id: int = Path(ge=1)) -> dict:
     db=SessionLocal()
     element = CategoriaEgresoRepository(db).eliminar_categoria_egreso(id)
     if not element:

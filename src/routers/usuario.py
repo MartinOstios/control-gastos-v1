@@ -12,9 +12,14 @@ from fastapi import status
 from src.repositories.usuario import UsuarioRepository
 router = APIRouter(prefix="/api/v1/usuarios", tags=["usuario"])
 
+from typing import Annotated
+from fastapi.security import HTTPAuthorizationCredentials
+from fastapi import Depends
+from src.auth.has_access import security
+
 
 @router.get("/", response_model=List[Usuario], description="Obtener todos los usuarios")
-def obtener_usuarios(offset: int = Query(default=None, min=0),limit: int = Query(default=None, min=1)
+def obtener_usuarios(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], offset: int = Query(default=None, min=0),limit: int = Query(default=None, min=1)
 ) -> List[Usuario]:
     db = SessionLocal()
     result = UsuarioRepository(db).obtener_usuarios(offset, limit)
@@ -22,7 +27,7 @@ def obtener_usuarios(offset: int = Query(default=None, min=0),limit: int = Query
 
 
 @router.get('/{id}', response_model=Usuario, description="Obtener un usuario por id")
-def obtener_usuario(id: int = Path(ge=1)) -> Usuario:
+def obtener_usuario(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], id: int = Path(ge=1)) -> Usuario:
     db=SessionLocal()
     element= UsuarioRepository(db).obtener_usuario(id)
     if not element:
@@ -31,13 +36,13 @@ def obtener_usuario(id: int = Path(ge=1)) -> Usuario:
 
 
 @router.post('/', response_model=Usuario, description="Crear un usuario")
-def crear_usuario(usuario: Usuario = Body()) -> dict:
+def crear_usuario(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], usuario: Usuario = Body()) -> dict:
     db=SessionLocal()
     new_usuario= UsuarioRepository(db).crear_usuario(usuario)
     return JSONResponse(content={"message": "Usuario registrado con exito", "data": jsonable_encoder(new_usuario)}, status_code=status.HTTP_201_CREATED)
 
 @router.put('/{id}', response_model=dict, description="Actualizar un usuario por id")
-def update_usuario(id: int = Path(ge=1), usuario: Usuario = Body()) -> dict:
+def update_usuario(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], id: int = Path(ge=1), usuario: Usuario = Body()) -> dict:
     db=SessionLocal()
     element= UsuarioRepository(db).update_usuario(id, usuario)
     if not element:
@@ -46,7 +51,7 @@ def update_usuario(id: int = Path(ge=1), usuario: Usuario = Body()) -> dict:
 
 
 @router.delete('/{id}', response_model=dict, description="Eliminar un usuario por id")
-def eliminar_usuario(id: int = Path(ge=1)) -> dict:
+def eliminar_usuario(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], id: int = Path(ge=1)) -> dict:
     db=SessionLocal()
     element = UsuarioRepository(db).eliminar_usuario(id)
     if not element:

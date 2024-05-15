@@ -12,9 +12,14 @@ from fastapi.params import Query
 from fastapi import status
 router = APIRouter(prefix="/api/v1/egresos", tags=["egreso"])
 
+from typing import Annotated
+from fastapi.security import HTTPAuthorizationCredentials
+from fastapi import Depends
+from src.auth.has_access import security
+
 
 @router.get("/", response_model=List[Egreso], description="Obtener todos los egresos")
-def obtener_egresos(offset: int = Query(default=None, min=0), limit: int = Query(default=None, min=1)
+def obtener_egresos(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], offset: int = Query(default=None, min=0), limit: int = Query(default=None, min=1)
                     ) -> List[Egreso]:
     db = SessionLocal()
     result = EgresoRepository(db).obtener_egresos(offset, limit)
@@ -22,7 +27,7 @@ def obtener_egresos(offset: int = Query(default=None, min=0), limit: int = Query
 
 
 @router.get('/{id}', response_model=Egreso, description="Obtener un egreso por id")
-def obtener_egreso(id: int = Path(ge=1)) -> Egreso:
+def obtener_egreso(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], id: int = Path(ge=1)) -> Egreso:
     db = SessionLocal()
     element = EgresoRepository(db).obtener_egreso(id)
     if not element:
@@ -31,14 +36,14 @@ def obtener_egreso(id: int = Path(ge=1)) -> Egreso:
 
 
 @router.post('/', response_model=Egreso, description="Crear un egreso")
-def crear_egreso(egreso: Egreso = Body()) -> dict:
+def crear_egreso(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], egreso: Egreso = Body()) -> dict:
     db = SessionLocal()
     nuevo_egreso = EgresoRepository(db).crear_egreso(egreso)
     return JSONResponse(content={"message": "Egreso registrado con exito", "data": jsonable_encoder(nuevo_egreso)}, status_code=status.HTTP_201_CREATED)
 
 
 @router.put('/{id}', response_model=dict, description="Actualizar un egreso por id")
-def update_egreso(id: int = Path(ge=1), egreso: Egreso = Body()) -> dict:
+def update_egreso(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], id: int = Path(ge=1), egreso: Egreso = Body()) -> dict:
     db = SessionLocal()
     element = EgresoRepository(db).obtener_egreso(id)
     if not element:
@@ -49,7 +54,7 @@ def update_egreso(id: int = Path(ge=1), egreso: Egreso = Body()) -> dict:
 
 
 @router.delete('/{id}', response_model=dict, description="Eliminar un egreso por id")
-def eliminar_egreso(id: int = Path(ge=1)) -> dict:
+def eliminar_egreso(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], id: int = Path(ge=1)) -> dict:
     db = SessionLocal()
     element = EgresoRepository(db).obtener_egreso(id)
     if not element:

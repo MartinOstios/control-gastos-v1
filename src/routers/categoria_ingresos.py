@@ -13,8 +13,14 @@ from src.repositories.categoria_ingreso import CategoriaIngresoRepository
 router = APIRouter(prefix="/api/v1/categoria-ingresos",tags=["categoria-ingreso"])
 
 
+from typing import Annotated
+from fastapi.security import HTTPAuthorizationCredentials
+from fastapi import Depends
+from src.auth.has_access import security
+
+
 @router.get("/", response_model=List[CategoriaIngresos], description="Obtener todas las categorias de ingresos")
-def obtener_categoria_ingresos(offset: int = Query(default=None, min=0),limit: int = Query(default=None, min=1)
+def obtener_categoria_ingresos(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], offset: int = Query(default=None, min=0),limit: int = Query(default=None, min=1)
 ) -> List[CategoriaIngresos]:
     db = SessionLocal()
     result = CategoriaIngresoRepository(db).obtener_categorias_ingresos(offset, limit)
@@ -22,7 +28,7 @@ def obtener_categoria_ingresos(offset: int = Query(default=None, min=0),limit: i
 
 
 @router.get('/{id}', response_model=CategoriaIngresos, description="Obtener una categoria ingreso por id")
-def obtener_categoria_ingreso(id: int = Path(ge=1)) -> CategoriaIngresos:
+def obtener_categoria_ingreso(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], id: int = Path(ge=1)) -> CategoriaIngresos:
     db=SessionLocal()
     element= CategoriaIngresoRepository(db).obtener_categoria_ingreso(id)
     if not element:
@@ -31,13 +37,13 @@ def obtener_categoria_ingreso(id: int = Path(ge=1)) -> CategoriaIngresos:
 
 
 @router.post('/', response_model=CategoriaIngresos, description="Crear un ingreso")
-def crear_categoria_ingreso(categoriaIngreso: CategoriaIngresos = Body()) -> dict:
+def crear_categoria_ingreso(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], categoriaIngreso: CategoriaIngresos = Body()) -> dict:
     db=SessionLocal()
     new_categoria_ingreso= CategoriaIngresoRepository(db).crear_categoria_ingreso(categoriaIngreso)
     return JSONResponse(content={"message": "Categoria ingreso registrado con exito", "data": jsonable_encoder(new_categoria_ingreso)}, status_code=status.HTTP_201_CREATED)
 
 @router.put('/{id}', response_model=dict, description="Actualizar un ingreso por id")
-def update_categoria_ingreso(id: int = Path(ge=1), categoria_ingreso: CategoriaIngresos = Body()) -> dict:
+def update_categoria_ingreso(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], id: int = Path(ge=1), categoria_ingreso: CategoriaIngresos = Body()) -> dict:
     db=SessionLocal()
     element= CategoriaIngresoRepository(db).update_categoria_ingreso(id, categoria_ingreso)
     if not element:
@@ -46,7 +52,7 @@ def update_categoria_ingreso(id: int = Path(ge=1), categoria_ingreso: CategoriaI
 
 
 @router.delete('/{id}', response_model=dict, description="Eliminar un ingreso por id")
-def eliminar_categoria_ingreso(id: int = Path(ge=1)) -> dict:
+def eliminar_categoria_ingreso(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)], id: int = Path(ge=1)) -> dict:
     db=SessionLocal()
     element = CategoriaIngresoRepository(db).eliminar_categoria_ingreso(id)
     if not element:

@@ -13,9 +13,14 @@ from fastapi.encoders import jsonable_encoder
 
 router = APIRouter(prefix="/api/v1/reportes", tags=["reporte"])
 
+from typing import Annotated
+from fastapi.security import HTTPAuthorizationCredentials
+from fastapi import Depends
+from src.auth.has_access import security
+
 
 @router.get('/basico', description="El reporte básico muestra cuántos ingresos se han recibido, cuántos egresos se han realizado y cuánto dinero se tiene actualmente (diferencia).")
-def obtener_reporte_basico() -> dict:
+def obtener_reporte_basico(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)]) -> dict:
     db = SessionLocal()
     egresos = db.query(EgresoModel).all()
     ingresos = db.query(IngresoModel).all()
@@ -32,7 +37,7 @@ def obtener_reporte_basico() -> dict:
 
 
 @router.get('/ampliado', description="El reporte ampliado muestra la información de ingresos y egresos agrupada por categorías.")
-def obtener_reporte_ampliado() -> dict:
+def obtener_reporte_ampliado(credentials: Annotated[HTTPAuthorizationCredentials,Depends(security)]) -> dict:
     lista_ingresos = []
     db = SessionLocal()
     egresos = db.query(EgresoModel).all()
