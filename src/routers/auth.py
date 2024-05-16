@@ -26,7 +26,7 @@ def login_user(user: UserLoginSchema) -> dict:
         access_token, refresh_token = AuthRepository().login_user(user)
         return JSONResponse(content={"access_token": access_token,"refresh_token": refresh_token},status_code=status.HTTP_200_OK,)
     except Exception as err:
-        return JSONResponse(content={"message": "Invalid credentials","data": None},status_code=status.HTTP_401_UNAUTHORIZED,)
+        return JSONResponse(content={"message": "Invalid credentials","data": str(err)},status_code=status.HTTP_401_UNAUTHORIZED,)
 
 @auth_router.get("/refresh_token",tags=["auth"],response_model=dict,description="Creates a new token with extended lifetime",)
 def refresh_token(credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:  
